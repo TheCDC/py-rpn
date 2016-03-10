@@ -20,4 +20,5 @@ setup(name='pyrpncalc',
       packages=['pyrpncalc'],
       download_url="https://bitbucket.org/TheCDC/pyrpn/get/53416f7e6e71.zip",
       install_requires=[],
+      scripts=["bin/pyrpncalc"],
       zip_safe=True)
