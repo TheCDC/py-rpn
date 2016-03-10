@@ -277,7 +277,7 @@ class stackRPN():
             "10 cos 2 ^ 10 sin 2 ^ +" => 1.000000000000
             "2 dup +" => 4.000000000000
         Here are some commands:"""
-        print()
+        print(helpstr)
         for i in sorted(self.cmddict.keys()):
             try:
                 print("<\'{0}\':{1}>\n".format(i, self.cmddict[i][0].__doc__))
