@@ -272,6 +272,7 @@ class stackRPN():
 		curstack = self.getStack()
 		return '\n'.join(["{0} : {1}".format(len(curstack)-i,curstack[i]) for i in range(0,len(curstack))])
 
+
 def main():
 	"""\nRun in interactive mode"""
 	# create an instance of RPN
