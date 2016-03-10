@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pyrpncalc',
-      version='0.1.8',
+      version='0.1.10',
       description="""A Reverse Polish Notation (postfix) module with extensive operation support.""",
       long_description="Use your favorite numeric input style, RPN, right on your desktop! This module is primarily designed for use in interactive mode, but may also be used by other modules. Run with 'python3 -m pyrpncalc'",
       keywords="math calculator utility command line",
