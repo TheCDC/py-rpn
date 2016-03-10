@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import math
 import decimal
-import json
+# import json
 import enum
 import re
 import logging
@@ -344,9 +344,9 @@ def main():
         print("Current stack:")
         print(instance)
 
-        if toExit:
-            logging.info(instance)
-            exit()
+        # if toExit:
+        #     logging.info(instance)
+        #     exit()
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
