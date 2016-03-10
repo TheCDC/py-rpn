@@ -55,6 +55,7 @@ class stackRPN():
             'fact': [math.factorial, expr_types.function, 1],
             'exp': [self.stackEXP, expr_types.arithmetic, 2],
             '^': [self.stackEXP, expr_types.arithmetic, 2],
+            'pow': [self.stackEXP, expr_types.arithmetic, 2],
             'deg': [math.degrees, expr_types.function, 1],
             'rad': [math.radians, expr_types.function, 1],
             'log': [math.log, expr_types.function, 1],
