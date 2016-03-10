@@ -9,5 +9,5 @@ setup(name='pyrpncalc',
       author_email='christopher.chen1995@gmail.com',
       license='Public Domain',
       packages=['pyrpncalc'],
-      install_requires=['math', 'decimal', 're', 'enum', 'logging']
+      install_requires=['math', 'decimal', 're', 'enum', 'logging'],
       zip_safe=False)
