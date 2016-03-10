@@ -262,10 +262,10 @@ class stackRPN():
 
     def stackHELP(self):
         """
-        Print out commands
+        Prints out commands and other help.
         """
         args = 0
-        print("Welcome to the RPN calculator in Python!\nEnter math functions and arithmetic operators in RPN.\nHere are some commands:")
+        print("Welcome to the RPN calculator in Python!\nEnter math functions and arithmetic operators in RPN.\nSeparate names (sin, pi, e, etc.) and numbers by spaces, don't worry about spaces for operators (+,-,*,/).\nHere are some commands:")
         for i in sorted(self.cmddict.keys()):
             try:
                 print("<\'{0}\':{1}>\n".format(i, self.cmddict[i][0].__doc__))
