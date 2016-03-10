@@ -10,6 +10,6 @@ setup(name='pyrpncalc',
       author_email='christopher.chen1995@gmail.com',
       license='Public Domain',
       packages=['pyrpncalc'],
-      downloads=["https://bitbucket.org/TheCDC/pyrpn/downloads"]
+      downloads=["https://bitbucket.org/TheCDC/pyrpn/downloads"],
       install_requires=['math', 'decimal', 're', 'enum', 'logging'],
       zip_safe=True)
