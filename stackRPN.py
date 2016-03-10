@@ -5,7 +5,6 @@ import json
 import enum
 import re
 import logging
-from string_split_multiple_delimiters import split_by_list
 prompt = ">>>"
 goodbye = "Have a nice day!"
 
@@ -301,8 +300,9 @@ def main():
 			if userinput in ['exit','quit']:
 				print("Have a nice day!")
 				toExit = True
-		except KeyboardInterrupt:
+		except:
 			print("\nHave a nice day!")
+			exit()
 			toExit = True
 		# give that input to the stack
 		try:
