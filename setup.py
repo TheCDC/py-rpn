@@ -3,9 +3,9 @@ from setuptools import setup
 setup(name='pyrpncalc',
       author='Christopher Chen',
       author_email='christopher.chen1995@gmail.com',
-      version='0.3.0',
+      version='0.3.2',
       description="""A Reverse Polish Notation (postfix) module with extensive operation support.""",
-      long_description="Use your favorite numeric input style, RPN, right on your desktop! This module is primarily designed for use in interactive mode, but may also be used by other modules. Run with 'python3 -m pyrpncalc'",
+      long_description="Use your favorite numeric input style, RPN, right on your desktop! This module is primarily designed for use in interactive mode, but may also be used by other modules. Run on the command line with 'pyrpncalc'",
       classifiers=[
           "Programming Language :: Python",
           "Programming Language :: Python :: 3",
