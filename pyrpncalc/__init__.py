@@ -45,6 +45,14 @@ class stackRPN():
             'acos': [math.acos, expr_types.function, 1],
             'atan': [math.atan, expr_types.function, 1],
             'sqrt': [math.sqrt, expr_types.function, 1],
+            'cosh': [math.cosh, expr_types.function, 1],
+            'sinh': [math.sinh, expr_types.function, 1],
+            'tanh': [math.tanh, expr_types.function, 1],
+            'tanh': [math.tanh, expr_types.function, 1],
+            'ceil': [math.ceil, expr_types.function, 1],
+            'floor': [math.floor, expr_types.function, 1],
+            'abs': [math.fabs, expr_types.function, 1],
+            'fact': [math.factorial, expr_types.function, 1],
             'exp': [self.stackEXP, expr_types.arithmetic, 2],
             '^': [self.stackEXP, expr_types.arithmetic, 2],
             'deg': [math.degrees, expr_types.function, 1],
@@ -87,7 +95,8 @@ class stackRPN():
         # self.stackops = ['swap','drop','dup','rot','clean','ddup']
 
     def cmd(self, c):
-        """\nRun a command"""
+        """Run a command
+        """
         # retrieve the type of the function
         ctype = self.cmddict[c][1]
         # create an alias for the function from the dictionary
@@ -122,9 +131,8 @@ class stackRPN():
             raise StackError("Invalid arguments for that function.")
 
     def interpret(self, s):
-        """
-        The workhorse of the object.
-        Interprets lines of input as commands or numeric input or other
+        """The workhorse of the object.
+        Interpret lines of input as commands or numeric input or other
         functions.
         """
         # for sym in ['+','-','*','/']:
@@ -148,8 +156,7 @@ class stackRPN():
                 self.cmd(i)
 
     def stackINV(self):
-        """
-        Calculates the reciprocal of the value in the bottom register.
+        """Calculate the reciprocal of the value in the bottom register.
         """
         args = 1
         a = self.stack.pop()
@@ -157,10 +164,13 @@ class stackRPN():
         return a
 
     def stackNEG(self):
+        """Negate the bottom register
+        """
         self.stack.append(-self.stack.pop())
 
     def stackAdd(self):
-        """\nAdds the bottom two numbers of the stack"""
+        """Add the bottom two numbers of the stack
+        """
         try:
             args = 2
             a, b = self.stack.pop(), self.stack.pop()
@@ -169,23 +179,27 @@ class stackRPN():
             raise StackError("Not enough values for addition.")
 
     def stackSubtract(self):
-        """\nSubtracts the bottom two values in the stack"""
+        """Subtract the bottom two values in the stack
+        """
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         return b - a
 
     def stackMult(self):
-        """\nMultiplies the bottom two values in the stack"""
+        """Multiply the bottom two values in the stack
+        """
         a, b = self.stack.pop(), self.stack.pop()
         return (b * a)
 
     def stackDiv(self):
-        """\nDivides the bottom two values in the stack"""
+        """Divides the bottom two values in the stack
+        """
         a, b = self.stack.pop(), self.stack.pop()
         return(decimal.Decimal(b) / decimal.Decimal(a))
 
     def stackEXP(self):
-        """\nRaises the number in the second to last register the the power of the last register"""
+        """Raise the number in the second to last register the the power of the last register
+        """
         # this command is different because it sort of takes two values
         args = 2
         exp, num = self.stack.pop(), self.stack.pop()
@@ -194,20 +208,24 @@ class stackRPN():
         # print("test")
 
     def getStack(self):
-        """\nReturns the stack as a list"""
+        """Return the stack as a list
+        """
         return self.stack[:]
 
     def setStack(self, l):
-        """\nSets the stack. Expects a list."""
+        """Sets the stack. Expects a list.
+        """
         self.stack = l[:]
 
     def stackDUP(self):
-        """\nDuplicates the bottom value of the stack"""
+        """Duplicate the bottom value of the stack
+        """
         args = 2
         self.stack.append(self.stack[-1])
 
     def stackDUPN(self):
-        """\nDuplicates the bottom N items on the stack"""
+        """Duplicate the bottom N items on the stack
+        """
         old = self.stack[:]
         try:
             n = int(self.stack.pop())
@@ -219,11 +237,13 @@ class stackRPN():
             raise StackError()
 
     def stackDROP(self):
-        """\nDeletes the bottom value of the stack"""
+        """Delete the bottom value of the stack
+        """
         del self.stack[-1]
 
     def stackDROPN(self):
-        """\nDeletes the bottom value of the stack"""
+        """Delete the bottom value of the stack
+        """
         old = self.stack[:]
         n = self.stack.pop()
         try:
@@ -234,23 +254,26 @@ class stackRPN():
             raise StackError()
 
     def stackSWAP(self):
-        """\nSwaps the bottom two values of the stack"""
+        """Swap the bottom two values of the stack
+        """
         args = 2
         self.stack[-1], self.stack[-2] = self.stack[-2], self.stack[-1]
 
     def stackROT(self):
-        """\nRotates the bottom 3 values of the stack"""
+        """Rotate the bottom 3 values of the stack
+        """
         # shuffle the values around, easy peasy
         args = 3
         self.stack[-1], self.stack[-2], self.stack[-3] = self.stack[-2], self.stack[-3], self.stack[-1]
 
     def stackCLEAN(self):
-        """\nClean any invalid values from the stack"""
+        """Clean any invalid values from the stack"""
         if None in self.stack:
             self.stack.remove(None)
 
     def stackDDUP(self):
-        """\nDuplicate the bottom 2 items in the stack"""
+        """Duplicate the bottom 2 items in the stack
+        """
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         self.stack += [b, a, b, a]
@@ -258,11 +281,12 @@ class stackRPN():
         # 	self.stack.append(i)
 
     def stackEXIT(self):
+        """Kill the program
+        """
         exit()
 
     def stackHELP(self):
-        """
-        Prints out commands and other help.
+        """Print out commands and other help.
         """
         args = 0
         helpstr = """Welcome to the Reverse Polish Notation calculator in Python!
@@ -294,13 +318,15 @@ class stackRPN():
                 print("<No help available.>\n")
 
     def __str__(self):
-        """Return a string representation of the stack, limits decimals to 12 digits."""
+        """Return a string representation of the stack, limits decimals to 12 digits.
+        """
         curstack = self.getStack()
         return '\n'.join(["{0} : {1:.12f}".format(len(curstack) - i, curstack[i]) for i in range(0, len(curstack))])
 
 
 def main():
-    """\nRun in interactive mode"""
+    """Run in interactive mode
+    """
     # create an instance of RPN
     instance = stackRPN()
     try:
