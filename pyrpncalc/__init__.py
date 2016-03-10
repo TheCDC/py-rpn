@@ -265,7 +265,19 @@ class stackRPN():
         Prints out commands and other help.
         """
         args = 0
-        print("Welcome to the RPN calculator in Python!\nEnter math functions and arithmetic operators in RPN.\nSeparate names (sin, pi, e, etc.) and numbers by spaces, don't worry about spaces for operators (+,-,*,/).\nHere are some commands:")
+        helpstr = """Welcome to the RPN calculator in Python!
+        Enter math functions and arithmetic operators in RPN.
+        Separate names (sin, pi, e, etc.) and numbers by spaces, don't worry about spaces for operators (+,-,*,/).
+        Examples:
+            "1 1+" => 2
+            "1 2 + 3 4 + /" => 0.428571428571
+            "pi sin" => 0.000000000000
+            "2 sqrt 2 sqrt *" => 2.000000000000
+            "2 2 inv ^ 2 ^" => 2.000000000000
+            "10 cos 2 ^ 10 sin 2 ^ +" => 1.000000000000
+            "2 dup +" => 4.000000000000
+        Here are some commands:"""
+        print()
         for i in sorted(self.cmddict.keys()):
             try:
                 print("<\'{0}\':{1}>\n".format(i, self.cmddict[i][0].__doc__))
@@ -273,8 +285,9 @@ class stackRPN():
                 print("<No help available.>\n")
 
     def __str__(self):
+        """Return a string representation of the stack, limits decimals to 12 digits."""
         curstack = self.getStack()
-        return '\n'.join(["{0} : {1}".format(len(curstack) - i, curstack[i]) for i in range(0, len(curstack))])
+        return '\n'.join(["{0} : {1:.12f}".format(len(curstack) - i, curstack[i]) for i in range(0, len(curstack))])
 
 
 def main():
