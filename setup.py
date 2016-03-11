@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='pyrpncalc',
       author='Christopher Chen',
       author_email='christopher.chen1995@gmail.com',
-      version='0.3.2',
+      version='0.3.3',
       description="""A Reverse Polish Notation (postfix) module with extensive operation support.""",
       long_description="Use your favorite numeric input style, RPN, right on your desktop! This module is primarily designed for use in interactive mode, but may also be used by other modules. Run on the command line with 'pyrpncalc'",
       classifiers=[
@@ -18,7 +18,7 @@ setup(name='pyrpncalc',
       url='https://bitbucket.org/TheCDC/pyrpn',
       license='Public Domain',
       packages=['pyrpncalc'],
-      download_url="https://bitbucket.org/TheCDC/pyrpn/get/53416f7e6e71.zip",
+      download_url="https://bitbucket.org/TheCDC/pyrpn/get/HEAD.zip",
       install_requires=[],
       scripts=["bin/pyrpncalc"],
       zip_safe=True)
