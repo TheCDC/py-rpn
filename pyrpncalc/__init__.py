@@ -17,6 +17,17 @@ class StackError(Exception):
     def __str__(self):
         return repr(self.value)
 
+def try_stackop(func):
+    """Safely use method of stackRPN object without modifying the state after a failure
+    """
+    def newfunc(self,*args,**kwargs):
+        oldstack = self.getStack()
+        try:
+            func(args,kwargs)
+        except Exception as e:
+            self.setStack(oldstack)
+            raise e
+
 
 class stackRPN():
     """A class that implements RPN math notation."""
@@ -81,6 +92,7 @@ class stackRPN():
             'clean': [self.stackCLEAN, expr_types.stackop, 0],
             'ddup': [self.stackDDUP, expr_types.stackop, 2],
             'dupn': [self.stackDUPN, expr_types.stackop, 1],
+            'pick': [self.stackPICK, expr_types.stackop, 1],
             'help': [self.stackHELP, expr_types.stackop, 0],
             "exit": [self.stackEXIT, expr_types.stackop, 0],
             "quit": [self.stackEXIT, expr_types.stackop, 0]
@@ -95,13 +107,14 @@ class stackRPN():
         # self.constants = ['pi','e']
         # self.stackops = ['swap','drop','dup','rot','clean','ddup']
 
+
     def cmd(self, c):
         """Run a command
         """
-        # retrieve the type of the function
-        ctype = self.cmddict[c][1]
         # create an alias for the function from the dictionary
         command = self.cmddict[c][0]
+        # retrieve the type of the function
+        ctype = self.cmddict[c][1]
         # retrieve required number of aguments
         numargs = self.cmddict[c][2]
 
@@ -214,7 +227,7 @@ class stackRPN():
         return self.stack[:]
 
     def setStack(self, l):
-        """Sets the stack. Expects a list.
+        """Set the stack. Expects a list.
         """
         self.stack = l[:]
 
@@ -255,40 +268,45 @@ class stackRPN():
             raise StackError()
 
     def stackSWAP(self):
-        """Swap the bottom two values of the stack
         """
+        Swap the bottom two values of the stack """
         args = 2
         self.stack[-1], self.stack[-2] = self.stack[-2], self.stack[-1]
 
     def stackROT(self):
-        """Rotate the bottom 3 values of the stack
         """
+        Rotate the bottom 3 values of the stack """
         # shuffle the values around, easy peasy
         args = 3
         self.stack[-1], self.stack[-2], self.stack[-3] = self.stack[-2], self.stack[-3], self.stack[-1]
 
     def stackCLEAN(self):
-        """Clean any invalid values from the stack"""
+        """
+        Clean any invalid values from the stack"""
         if None in self.stack:
             self.stack.remove(None)
 
     def stackDDUP(self):
-        """Duplicate the bottom 2 items in the stack
         """
+        Duplicate the bottom 2 items in the stack """
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         self.stack += [b, a, b, a]
         # for i in [b,a,b,a]:
         # 	self.stack.append(i)
+    def stackPICK(self):
+        """
+        Duplicate the (N-1)th item to the bottom of the stack. """
+        self.stack.append(self.stack[int(-(self.stack.pop()+1))])
 
     def stackEXIT(self):
-        """Kill the program
         """
+        Kill the program"""
         exit()
 
     def stackHELP(self):
-        """Print out commands and other help.
         """
+        Print out commands and other help."""
         args = 0
         helpstr = """Welcome to the Reverse Polish Notation calculator in Python!
         Enter math functions and arithmetic operators in RPN.
@@ -316,13 +334,13 @@ class stackRPN():
             try:
                 print("<\'{0}\':{1}>\n".format(i, self.cmddict[i][0].__doc__))
             except AttributeError:
-                print("<No help available.>\n")
+                print("<No help available for {0}.>\n".format(i))
 
     def __str__(self):
-        """Return a string representation of the stack, limits decimals to 12 digits.
         """
+        Return a string representation of the stack, limits decimals to 12 digits."""
         curstack = self.getStack()
-        return '\n'.join(["{0} : {1:.12f}".format(len(curstack) - i, curstack[i]) for i in range(0, len(curstack))])
+        return '\n'.join(["{0} : {1:.12f}".format(len(curstack) - i - 1, curstack[i]) for i in range(0, len(curstack))])
 
 
 def main():
