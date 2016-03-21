@@ -17,16 +17,20 @@ class StackError(Exception):
     def __str__(self):
         return repr(self.value)
 
-def try_stackop(func):
-    """Safely use method of stackRPN object without modifying the state after a failure
-    """
-    def newfunc(self,*args,**kwargs):
-        oldstack = self.getStack()
+def try_stackop(towrap):
+    """Safely use method of stackRPN object without modifying the state after a failure."""
+    def new_wrapper(*wrapper_args,**wrapper_kwargs):
+        print(wrapper_args[0])
+        oldstack = wrapper_args[0].getStack()
         try:
-            func(args,kwargs)
+            print("Gotta go fast")
+            towrap(*wrapper_args,**wrapper_kwargs)
         except Exception as e:
-            self.setStack(oldstack)
+            print("Error within wrapped func.")
+            wrapper_args[0].setStack(oldstack)
             raise e
+    return towrap
+    # return new_wrapper
 
 
 class stackRPN():
@@ -140,7 +144,7 @@ class stackRPN():
             # if command is a constant
             elif ctype == self.expr_types.constant:
                 self.stack.append(decimal.Decimal(command()))
-        except IndexError as e:
+        except Exception as e:
             self.setStack(oldstack)
             raise StackError("Invalid arguments for that function.")
 
@@ -169,6 +173,7 @@ class stackRPN():
             elif (i.lower() in self.cmddict):
                 self.cmd(i)
 
+    @try_stackop
     def stackINV(self):
         """Calculate the reciprocal of the value in the bottom register.
         """
@@ -177,11 +182,13 @@ class stackRPN():
         a = 1 / a
         return a
 
+    @try_stackop
     def stackNEG(self):
         """Negate the bottom register
         """
         self.stack.append(-self.stack.pop())
 
+    @try_stackop
     def stackAdd(self):
         """Add the bottom two numbers of the stack
         """
@@ -192,6 +199,7 @@ class stackRPN():
         except IndexError:
             raise StackError("Not enough values for addition.")
 
+    @try_stackop
     def stackSubtract(self):
         """Subtract the bottom two values in the stack
         """
@@ -199,18 +207,21 @@ class stackRPN():
         a, b = self.stack.pop(), self.stack.pop()
         return b - a
 
+    @try_stackop
     def stackMult(self):
         """Multiply the bottom two values in the stack
         """
         a, b = self.stack.pop(), self.stack.pop()
         return (b * a)
 
+    @try_stackop
     def stackDiv(self):
         """Divides the bottom two values in the stack
         """
         a, b = self.stack.pop(), self.stack.pop()
         return(decimal.Decimal(b) / decimal.Decimal(a))
 
+    @try_stackop
     def stackEXP(self):
         """Raise the number in the second to last register the the power of the last register
         """
@@ -237,6 +248,7 @@ class stackRPN():
         args = 2
         self.stack.append(self.stack[-1])
 
+    @try_stackop
     def stackDUPN(self):
         """Duplicate the bottom N items on the stack
         """
@@ -250,11 +262,13 @@ class stackRPN():
             self.stack = old[:]
             raise StackError()
 
+    @try_stackop
     def stackDROP(self):
         """Delete the bottom value of the stack
         """
         del self.stack[-1]
 
+    @try_stackop
     def stackDROPN(self):
         """Delete the bottom value of the stack
         """
@@ -267,12 +281,14 @@ class stackRPN():
             self.stack = old[:]
             raise StackError()
 
+    @try_stackop
     def stackSWAP(self):
         """
         Swap the bottom two values of the stack """
         args = 2
         self.stack[-1], self.stack[-2] = self.stack[-2], self.stack[-1]
 
+    @try_stackop
     def stackROT(self):
         """
         Rotate the bottom 3 values of the stack """
@@ -286,6 +302,7 @@ class stackRPN():
         if None in self.stack:
             self.stack.remove(None)
 
+    @try_stackop
     def stackDDUP(self):
         """
         Duplicate the bottom 2 items in the stack """
@@ -293,7 +310,9 @@ class stackRPN():
         a, b = self.stack.pop(), self.stack.pop()
         self.stack += [b, a, b, a]
         # for i in [b,a,b,a]:
-        # 	self.stack.append(i)
+        #   self.stack.append(i)
+
+    @try_stackop
     def stackPICK(self):
         """
         Duplicate the (N-1)th item to the bottom of the stack. """
@@ -394,5 +413,5 @@ def main():
         #     exit()
 
 if __name__ == '__main__':
-    # logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
     main()
