@@ -341,6 +341,8 @@ class stackRPN():
                 => 4.000000000000
             "e pi n ^" = e^(-pi)
                 => 0.043213918264
+
+
         Here are some commands:"""
         print(helpstr)
 
@@ -353,14 +355,12 @@ class stackRPN():
         name_width = 72
         doc_width = 60
         offset = (name_width - doc_width) // 2
-
+        separator = "=" * name_width
+        print(separator)
         for i in sorted(self.cmddict.keys()):
             try:
-                print(
-                    "{title}\n{body}\n{sep}".format(
-                        title=i,
-                        body='\n'.join([l.center(doc_width) for l in self.cmddict[i][0].__doc__.split('\n')]),
-                        sep="=" * name_width))
+                print("{title}|\n{under}\n{body}\n{sep}".format(title=i, under="-"*(len(i) + 1), body='\n'.join([l.center(
+                    doc_width) for l in self.cmddict[i][0].__doc__.split('\n')]), sep=separator))
             except AttributeError:
                 print(
                     "{title}\n{body}\n{sep}".format(
