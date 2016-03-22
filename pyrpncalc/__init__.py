@@ -17,14 +17,16 @@ class StackError(Exception):
     def __str__(self):
         return repr(self.value)
 
+
 def try_stackop(towrap):
-    """Safely use method of stackRPN object without modifying the state after a failure."""
-    def new_wrapper(*wrapper_args,**wrapper_kwargs):
+    """Safely use method of stackRPN object without modifying the state after a
+    failure."""
+    def new_wrapper(*wrapper_args, **wrapper_kwargs):
         print(wrapper_args[0])
         oldstack = wrapper_args[0].getStack()
         try:
             print("Gotta go fast")
-            towrap(*wrapper_args,**wrapper_kwargs)
+            towrap(*wrapper_args, **wrapper_kwargs)
         except Exception as e:
             print("Error within wrapped func.")
             wrapper_args[0].setStack(oldstack)
@@ -111,10 +113,8 @@ class stackRPN():
         # self.constants = ['pi','e']
         # self.stackops = ['swap','drop','dup','rot','clean','ddup']
 
-
     def cmd(self, c):
-        """Run a command
-        """
+        """Run a command."""
         # create an alias for the function from the dictionary
         command = self.cmddict[c][0]
         # retrieve the type of the function
@@ -150,8 +150,10 @@ class stackRPN():
 
     def interpret(self, s):
         """The workhorse of the object.
+
         Interpret lines of input as commands or numeric input or other
         functions.
+
         """
         # for sym in ['+','-','*','/']:
         # 	s = s.replace(sym,' ' + sym)
@@ -175,8 +177,7 @@ class stackRPN():
 
     @try_stackop
     def stackINV(self):
-        """Calculate the reciprocal of the value in the bottom register.
-        """
+        """Calculate the reciprocal of the value in the bottom register."""
         args = 1
         a = self.stack.pop()
         a = 1 / a
@@ -184,14 +185,12 @@ class stackRPN():
 
     @try_stackop
     def stackNEG(self):
-        """Negate the bottom register
-        """
+        """Negate the bottom register."""
         self.stack.append(-self.stack.pop())
 
     @try_stackop
     def stackAdd(self):
-        """Add the bottom two numbers of the stack
-        """
+        """Add the bottom two numbers of the stack."""
         try:
             args = 2
             a, b = self.stack.pop(), self.stack.pop()
@@ -201,30 +200,27 @@ class stackRPN():
 
     @try_stackop
     def stackSubtract(self):
-        """Subtract the bottom two values in the stack
-        """
+        """Subtract the bottom two values in the stack."""
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         return b - a
 
     @try_stackop
     def stackMult(self):
-        """Multiply the bottom two values in the stack
-        """
+        """Multiply the bottom two values in the stack."""
         a, b = self.stack.pop(), self.stack.pop()
         return (b * a)
 
     @try_stackop
     def stackDiv(self):
-        """Divides the bottom two values in the stack
-        """
+        """Divides the bottom two values in the stack."""
         a, b = self.stack.pop(), self.stack.pop()
         return(decimal.Decimal(b) / decimal.Decimal(a))
 
     @try_stackop
     def stackEXP(self):
-        """Raise the number in the second to last register the the power of the last register
-        """
+        """Raise the number in the second to last register the the power of the
+        last register."""
         # this command is different because it sort of takes two values
         args = 2
         exp, num = self.stack.pop(), self.stack.pop()
@@ -233,25 +229,25 @@ class stackRPN():
         # print("test")
 
     def getStack(self):
-        """Return the stack as a list
-        """
+        """Return the stack as a list."""
         return self.stack[:]
 
     def setStack(self, l):
-        """Set the stack. Expects a list.
+        """Set the stack.
+
+        Expects a list.
+
         """
         self.stack = l[:]
 
     def stackDUP(self):
-        """Duplicate the bottom value of the stack
-        """
+        """Duplicate the bottom value of the stack."""
         args = 2
         self.stack.append(self.stack[-1])
 
     @try_stackop
     def stackDUPN(self):
-        """Duplicate the bottom N items on the stack
-        """
+        """Duplicate the bottom N items on the stack."""
         old = self.stack[:]
         try:
             n = int(self.stack.pop())
@@ -264,14 +260,12 @@ class stackRPN():
 
     @try_stackop
     def stackDROP(self):
-        """Delete the bottom value of the stack
-        """
+        """Delete the bottom value of the stack."""
         del self.stack[-1]
 
     @try_stackop
     def stackDROPN(self):
-        """Delete the bottom value of the stack
-        """
+        """Delete the bottom value of the stack."""
         old = self.stack[:]
         n = self.stack.pop()
         try:
@@ -283,29 +277,25 @@ class stackRPN():
 
     @try_stackop
     def stackSWAP(self):
-        """
-        Swap the bottom two values of the stack """
+        """Swap the bottom two values of the stack."""
         args = 2
         self.stack[-1], self.stack[-2] = self.stack[-2], self.stack[-1]
 
     @try_stackop
     def stackROT(self):
-        """
-        Rotate the bottom 3 values of the stack """
+        """Rotate the bottom 3 values of the stack."""
         # shuffle the values around, easy peasy
         args = 3
         self.stack[-1], self.stack[-2], self.stack[-3] = self.stack[-2], self.stack[-3], self.stack[-1]
 
     def stackCLEAN(self):
-        """
-        Clean any invalid values from the stack"""
+        """Clean any invalid values from the stack."""
         if None in self.stack:
             self.stack.remove(None)
 
     @try_stackop
     def stackDDUP(self):
-        """
-        Duplicate the bottom 2 items in the stack """
+        """Duplicate the bottom 2 items in the stack."""
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         self.stack += [b, a, b, a]
@@ -316,16 +306,14 @@ class stackRPN():
     def stackPICK(self):
         """
         Duplicate the (N-1)th item to the bottom of the stack. """
-        self.stack.append(self.stack[int(-(self.stack.pop()+1))])
+        self.stack.append(self.stack[int(-(self.stack.pop() + 1))])
 
     def stackEXIT(self):
-        """
-        Kill the program"""
+        """Kill the program."""
         exit()
 
     def stackHELP(self):
-        """
-        Print out commands and other help."""
+        """Print out commands and other help."""
         args = 0
         helpstr = """Welcome to the Reverse Polish Notation calculator in Python!
         Enter math functions and arithmetic operators in RPN.
@@ -349,22 +337,41 @@ class stackRPN():
                 => 0.043213918264
         Here are some commands:"""
         print(helpstr)
+
+        # begin work for better help formatting
+        s = sorted(self.cmddict.keys())
+        names = [i[0] for i in s]
+        longest_name = max(map(len, names))
+        docs = [self.cmddict[i][0].__doc__ for i in s]
+
+        name_width = 72
+        doc_width = 60
+        offset = (name_width - doc_width) // 2
+
         for i in sorted(self.cmddict.keys()):
             try:
-                print("<\'{0}\':{1}>\n".format(i, self.cmddict[i][0].__doc__))
+                print(
+                    "{title}\n{body}\n{sep}".format(
+                        title=i,
+                        body='\n'.join([l.center(doc_width) for l in self.cmddict[i][0].__doc__.split('\n')]),
+                        sep="=" * name_width))
             except AttributeError:
-                print("<No help available for {0}.>\n".format(i))
+                print(
+                    "{title}\n{body}\n{sep}".format(
+                        title=i,
+                        body="NO HELP!".center(doc_width),
+                        sep="=" * name_width))
 
     def __str__(self):
-        """
-        Return a string representation of the stack, limits decimals to 12 digits."""
+        """Return a string representation of the stack, limits decimals to 12
+        digits."""
         curstack = self.getStack()
-        return '\n'.join(["{0} : {1:.12f}".format(len(curstack) - i - 1, curstack[i]) for i in range(0, len(curstack))])
+        return '\n'.join(["{0} : {1:.12f}".format(
+            len(curstack) - i - 1, curstack[i]) for i in range(0, len(curstack))])
 
 
 def main():
-    """Run in interactive mode
-    """
+    """Run in interactive mode."""
     # create an instance of RPN
     instance = stackRPN()
     try:
