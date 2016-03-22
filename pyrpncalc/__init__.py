@@ -31,8 +31,9 @@ def try_stackop(towrap):
             print("Error within wrapped func.")
             wrapper_args[0].setStack(oldstack)
             raise e
+    # it doesn't work, so just don't bother
     return towrap
-    # return new_wrapper
+    return new_wrapper
 
 
 class stackRPN():
@@ -143,7 +144,7 @@ class stackRPN():
             # if command is a constant
             elif ctype == self.expr_types.constant:
                 self.stack.append(decimal.Decimal(command()))
-        except Exception as e:
+        except (Exception,decimal.InvalidOperation) as e:
             self.setStack(oldstack)
             raise StackError("Invalid arguments for that function.")
 
@@ -166,8 +167,12 @@ class stackRPN():
                 # if command is a number
                 if i.replace(' ', '').replace('.', '').isdigit():
                     # add the typed number to the stack
+                    try:
+                        self.stack.append(decimal.Decimal(i))
+                    except Exception as e:
+                        print("Bad number'{}'!".format(i))
+                        break
                     print("Pushed:", i)
-                    self.stack.append(decimal.Decimal(i))
                 else:
                     raise ValueError("Invalid command!")
             # otherwise run the associated command
@@ -318,6 +323,26 @@ class stackRPN():
         """Kill the program."""
         exit()
 
+    def _makeCard(self,key):
+        t = key
+        u = "-" * (len(key) + 1)
+        name_width = 72
+        doc_width = 60
+        offset = (name_width - doc_width) // 2
+        separator = "=" * name_width
+
+        try:
+            b = '\n'.join([l.center(
+                doc_width) for l in self.cmddict[key][0].__doc__.split('\n')])
+        except AttributeError:
+            b = "NO HELP!".center(doc_width)
+
+        c = "{title}|\n{under}\n{body}\n{sep}".format(
+            title=t, under=u, body=b, sep=separator)
+        return c
+        print(c)
+        c = "TEST"
+
     def stackHELP(self):
         """Print out commands and other help."""
         args = 0
@@ -357,10 +382,11 @@ class stackRPN():
         offset = (name_width - doc_width) // 2
         separator = "=" * name_width
         print(separator)
-        for i in sorted(self.cmddict.keys()):
+        for funcname in sorted(self.cmddict.keys()):
             try:
-                print("{title}|\n{under}\n{body}\n{sep}".format(title=i, under="-"*(len(i) + 1), body='\n'.join([l.center(
-                    doc_width) for l in self.cmddict[i][0].__doc__.split('\n')]), sep=separator))
+                # print("{title}|\n{under}\n{body}\n{sep}".format(title=i, under="-" * (len(i) + 1), body='\n'.join(
+                #     [l.center(doc_width) for l in self.cmddict[i][0].__doc__.split('\n')]), sep=separator))
+                print(self._makeCard(funcname))
             except AttributeError:
                 print(
                     "{title}\n{body}\n{sep}".format(
