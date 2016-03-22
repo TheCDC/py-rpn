@@ -95,7 +95,6 @@ class stackRPN():
             'dup': [self.stackDUP, expr_types.stackop, 1],
             'd': [self.stackDUP, expr_types.stackop, 1],
             'rot': [self.stackROT, expr_types.stackop, 3],
-            'clean': [self.stackCLEAN, expr_types.stackop, 0],
             'ddup': [self.stackDDUP, expr_types.stackop, 2],
             'dupn': [self.stackDUPN, expr_types.stackop, 1],
             'pick': [self.stackPICK, expr_types.stackop, 1],
@@ -177,7 +176,8 @@ class stackRPN():
 
     @try_stackop
     def stackINV(self):
-        """Calculate the reciprocal of the value in the bottom register."""
+        """Calculate the reciprocal of the value in the bottom register.
+        2 => 0.5"""
         args = 1
         a = self.stack.pop()
         a = 1 / a
@@ -185,12 +185,14 @@ class stackRPN():
 
     @try_stackop
     def stackNEG(self):
-        """Negate the bottom register."""
+        """Negate the bottom register.
+        10 => -10"""
         self.stack.append(-self.stack.pop())
 
     @try_stackop
     def stackAdd(self):
-        """Add the bottom two numbers of the stack."""
+        """Add the bottom two numbers of the stack.
+        1 2 => 2"""
         try:
             args = 2
             a, b = self.stack.pop(), self.stack.pop()
@@ -200,14 +202,16 @@ class stackRPN():
 
     @try_stackop
     def stackSubtract(self):
-        """Subtract the bottom two values in the stack."""
+        """Subtract the bottom two values in the stack.
+        2000 663 => 1337"""
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         return b - a
 
     @try_stackop
     def stackMult(self):
-        """Multiply the bottom two values in the stack."""
+        """Multiply the bottom two values in the stack.
+        2 3 => 6"""
         a, b = self.stack.pop(), self.stack.pop()
         return (b * a)
 
@@ -220,7 +224,8 @@ class stackRPN():
     @try_stackop
     def stackEXP(self):
         """Raise the number in the second to last register the the power of the
-        last register."""
+        last register.
+        2 3 => 8"""
         # this command is different because it sort of takes two values
         args = 2
         exp, num = self.stack.pop(), self.stack.pop()
@@ -241,13 +246,15 @@ class stackRPN():
         self.stack = l[:]
 
     def stackDUP(self):
-        """Duplicate the bottom value of the stack."""
+        """Duplicate the bottom value of the stack.
+        1 2 3 => 1 2 3 3"""
         args = 2
         self.stack.append(self.stack[-1])
 
     @try_stackop
     def stackDUPN(self):
-        """Duplicate the bottom N items on the stack."""
+        """Duplicate the bottom N items on the stack.
+        1 2 3 4 2 => 1 2 3 4 3 4"""
         old = self.stack[:]
         try:
             n = int(self.stack.pop())
@@ -260,12 +267,14 @@ class stackRPN():
 
     @try_stackop
     def stackDROP(self):
-        """Delete the bottom value of the stack."""
+        """Delete the bottom value of the stack.
+        1 2 3 => 1 2"""
         del self.stack[-1]
 
     @try_stackop
     def stackDROPN(self):
-        """Delete the bottom value of the stack."""
+        """Delete the bottom n values of the stack.
+        1 2 3 2 => 1"""
         old = self.stack[:]
         n = self.stack.pop()
         try:
@@ -283,15 +292,12 @@ class stackRPN():
 
     @try_stackop
     def stackROT(self):
-        """Rotate the bottom 3 values of the stack."""
+        """Rotate the bottom 3 values of the stack.
+
+        1 2 3 => 2 3 1"""
         # shuffle the values around, easy peasy
         args = 3
         self.stack[-1], self.stack[-2], self.stack[-3] = self.stack[-2], self.stack[-3], self.stack[-1]
-
-    def stackCLEAN(self):
-        """Clean any invalid values from the stack."""
-        if None in self.stack:
-            self.stack.remove(None)
 
     @try_stackop
     def stackDDUP(self):
