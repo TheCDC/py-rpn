@@ -170,7 +170,7 @@ class stackRPN():
                     try:
                         self.stack.append(decimal.Decimal(i))
                     except Exception as e:
-                        print("Bad number'{}'!".format(i))
+                        print("Bad number'{}'!".format())
                         break
                     print("Pushed:", i)
                 else:
