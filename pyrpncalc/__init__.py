@@ -182,7 +182,7 @@ class stackRPN():
     @try_stackop
     def stackINV(self):
         """Calculate the reciprocal of the value in the bottom register.
-        2 => 0.5"""
+        2 inv => 0.5"""
         args = 1
         a = self.stack.pop()
         a = 1 / a
@@ -191,13 +191,13 @@ class stackRPN():
     @try_stackop
     def stackNEG(self):
         """Negate the bottom register.
-        10 => -10"""
+        10 neg => -10"""
         self.stack.append(-self.stack.pop())
 
     @try_stackop
     def stackAdd(self):
         """Add the bottom two numbers of the stack.
-        1 2 => 2"""
+        1 2 + => 2"""
         try:
             args = 2
             a, b = self.stack.pop(), self.stack.pop()
@@ -208,7 +208,7 @@ class stackRPN():
     @try_stackop
     def stackSubtract(self):
         """Subtract the bottom two values in the stack.
-        2000 663 => 1337"""
+        2000 663 - => 1337"""
         args = 2
         a, b = self.stack.pop(), self.stack.pop()
         return b - a
@@ -216,13 +216,14 @@ class stackRPN():
     @try_stackop
     def stackMult(self):
         """Multiply the bottom two values in the stack.
-        2 3 => 6"""
+        2 3 * => 6"""
         a, b = self.stack.pop(), self.stack.pop()
         return (b * a)
 
     @try_stackop
     def stackDiv(self):
-        """Divides the bottom two values in the stack."""
+        """Divides the bottom two values in the stack.
+        1 3 / => 0.333333333333"""
         a, b = self.stack.pop(), self.stack.pop()
         return(decimal.Decimal(b) / decimal.Decimal(a))
 
@@ -230,7 +231,7 @@ class stackRPN():
     def stackEXP(self):
         """Raise the number in the second to last register the the power of the
         last register.
-        2 3 => 8"""
+        2 3 ^ => 8"""
         # this command is different because it sort of takes two values
         args = 2
         exp, num = self.stack.pop(), self.stack.pop()
