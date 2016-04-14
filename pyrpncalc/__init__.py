@@ -82,6 +82,7 @@ class stackRPN():
             '*': [self.stackMult, expr_types.arithmetic, 2],
             '-': [self.stackSubtract, expr_types.arithmetic, 2],
             '/': [self.stackDiv, expr_types.arithmetic, 2],
+            '%': [self.stackMod, expr_types.arithmetic, 2],
             'neg': [self.stackNEG, expr_types.stackop, 1],
             'n': [self.stackNEG, expr_types.stackop, 1],
             'inv': [self.stackINV, expr_types.arithmetic, 1],
@@ -144,7 +145,7 @@ class stackRPN():
             # if command is a constant
             elif ctype == self.expr_types.constant:
                 self.stack.append(decimal.Decimal(command()))
-        except (Exception,decimal.InvalidOperation) as e:
+        except (Exception, decimal.InvalidOperation) as e:
             self.setStack(oldstack)
             raise StackError("Invalid arguments for that function.")
 
@@ -226,6 +227,11 @@ class stackRPN():
         1 3 / => 0.333333333333"""
         a, b = self.stack.pop(), self.stack.pop()
         return(decimal.Decimal(b) / decimal.Decimal(a))
+
+    @try_stackop
+    def stackMod(self):
+        a, b = self.stack.pop(), self.stack.pop()
+        return a % b
 
     @try_stackop
     def stackEXP(self):
@@ -320,11 +326,12 @@ class stackRPN():
         Duplicate the (N-1)th item to the bottom of the stack. """
         self.stack.append(self.stack[int(-(self.stack.pop() + 1))])
 
+
     def stackEXIT(self):
         """Kill the program."""
         exit()
 
-    def _makeCard(self,key):
+    def _makeCard(self, key):
         t = key
         u = "-" * (len(key) + 1)
         name_width = 72
