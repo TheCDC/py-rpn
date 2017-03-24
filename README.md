@@ -1,11 +1,13 @@
 # Description
 A command line Reverse Polish Notation (postfix) calculator program.
-
+Reade more about RPN [here](https://en.wikipedia.org/wiki/Reverse_Polish_notation)
 # Usage 
 Installing this package also installs the `pyrpncalc` command. Executing it will enter the program's interactive mode.
 
 Example expressions:
 ```
+    "RPN" = ALG
+        => result
     "1 1+" = (1+1)
         => 2
     "1 2 + 3 4 + /" = (1+2)/(3+4)
