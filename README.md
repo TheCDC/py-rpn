@@ -5,7 +5,7 @@ A command line Reverse Polish Notation (postfix) calculator program.
 Installing this package also installs the `pyrpncalc` command. Executing it will enter the program's interactive mode.
 
 Example expressions:
-    "1 1+" = (1+1)
+```    "1 1+" = (1+1)
         => 2
     "1 2 + 3 4 + /" = (1+2)/(3+4)
         => 0.428571428571
@@ -20,4 +20,4 @@ Example expressions:
     "2 dup +" = (2+2)
         => 4.000000000000
     "e pi n ^" = e^(-pi)
-        => 0.043213918264
+        => 0.043213918264```
